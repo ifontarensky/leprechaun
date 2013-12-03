@@ -39,3 +39,4 @@ nosetests.xml
 .pydevproject
 
 rainbow-table.txt
+rainbow-table.db

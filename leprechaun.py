@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import itertools
 import string
+import sqlite3
 
 def getHash(args):
   """Returns a string representing the hash that the user wishes to use."""
@@ -38,6 +39,10 @@ parser.add_argument("-w", "--wordlist", default="wordlist.txt",
   help="The wordlist to hash (default=wordlist.txt)")
 parser.add_argument("-o", "--output", default="rainbow-table.txt",
   help="Name of the rainbow table file (default=rainbow-table.txt)")
+parser.add_argument("-d", "--database", action="store_true",
+  help="Save in sqlite-database instead of textfile")
+parser.add_argument("--db-name", default="rainbow-table.db",
+  help="Name of the rainbow table database file (default=rainbow-table.db)")
 parser.add_argument("-n", "--number", type=int, default=0,
   help="Number of integers to append to end of password string (default=0)")
 parser.add_argument("-m", "--md5", action="store_true",
@@ -51,6 +56,13 @@ parser.add_argument("-s5", "--sha512", action="store_true",
 
 if __name__ == "__main__":
   args = parser.parse_args()
+
+  if args.database:
+    con = sqlite3.connect(args.db_name)
+    cur = con.cursor()
+    cur.execute("""create table if not exists rainbow(id integer primary key
+        autoincrement, hash text not null, word text not null)""")
+    con.commit()
   
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.
@@ -74,6 +86,9 @@ if __name__ == "__main__":
           line_hash = user_hash.copy()
           line_hash.update(line.encode("utf-8"))
           print(line_hash.hexdigest() + ": " + line, file=output)
+          if args.database:
+            cur.execute("insert into rainbow (hash, word) values (?, ?)", 
+              (str(line_hash.hexdigest()), str(line)))
 
           for combination in digit_generator(args.number):
             # Create an object to hash the line, combined with added digits
@@ -82,5 +97,14 @@ if __name__ == "__main__":
             combination_hash.update(combination_line.encode("utf-8"))
             print(combination_hash.hexdigest() + ": " + combination_line,
               file=output)
+            if args.database:
+              cur.execute("insert into rainbow (hash, word) values (?, ?)", 
+                (combination_hash.hexdigest(), combination_line))
+
+    if args.database:
+      cur.close()
+      con.commit()
+      con.close()
+
   except IOError as err:
     print("File error: " + str(err))
