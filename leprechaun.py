@@ -6,7 +6,7 @@ import itertools
 import string
 import sqlite3
 
-def getHash(args):
+def get_hash(args):
   """Returns a string representing the hash that the user wishes to use."""
   if args.sha1:
     return "sha1"
@@ -66,7 +66,7 @@ if __name__ == "__main__":
   
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.
-  user_hash = getHash(args)
+  user_hash = get_hash(args)
   if user_hash == "sha1":
     user_hash = hashlib.sha1()
   elif user_hash == "sha256":
