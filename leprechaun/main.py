@@ -35,8 +35,8 @@ def digit_generator(limit):
 
 # Create command line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("-w", "--wordlist", default="wordlist.txt",
-  help="The wordlist to hash (default=wordlist.txt)")
+parser.add_argument("-w", "--wordlist", default="data/wordlist.txt",
+  help="The wordlist to hash (default=data/wordlist.txt)")
 parser.add_argument("-o", "--output", default="rainbow-table.txt",
   help="Name of the rainbow table file (default=rainbow-table.txt)")
 parser.add_argument("-d", "--database", action="store_true",
@@ -66,15 +66,15 @@ if __name__ == "__main__":
   
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.
-  user_hash = get_hash(args)
-  if user_hash == "sha1":
-    user_hash = hashlib.sha1()
-  elif user_hash == "sha256":
-    user_hash = hashlib.sha256()
-  elif user_hash == "sha512":
-    user_hash = hashlib.sha512()
+  hash_object = get_hash(args)
+  if hash_object == "sha1":
+    hash_object = hashlib.sha1()
+  elif hash_object == "sha256":
+    hash_object = hashlib.sha256()
+  elif hash_object == "sha512":
+    hash_object = hashlib.sha512()
   else:
-    user_hash = hashlib.md5()
+    hash_object = hashlib.md5()
   
   try:
     with open(args.output, "w") as output:
@@ -83,7 +83,7 @@ if __name__ == "__main__":
           line = line.strip()
 
           # Create an object to hash the line
-          line_hash = user_hash.copy()
+          line_hash = hash_object.copy()
           line_hash.update(line.encode("utf-8"))
           print(line_hash.hexdigest() + ": " + line, file=output)
           if args.database:
@@ -93,7 +93,7 @@ if __name__ == "__main__":
           for combination in digit_generator(args.number):
             # Create an object to hash the line, combined with added digits
             combination_line = line + combination
-            combination_hash = user_hash.copy()
+            combination_hash = hash_object.copy()
             combination_hash.update(combination_line.encode("utf-8"))
             print(combination_hash.hexdigest() + ": " + combination_line,
               file=output)

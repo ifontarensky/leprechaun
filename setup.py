@@ -1,12 +1,16 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
-  name='Leprechaun',
-  version="0.1.0",
+  name='leprechaun',
+  version="2.0",
+  description="A simple rainbow table generator",
+  long_description=open("README.rst", encoding="utf-8").read(),
   author="Zach Dziura",
   author_email="zcdziura@gmail.com",
   url="https://github.com/zcdziura/leprechaun",
-  license="LICENSE.txt",
-  description="A simple rainbow table generator",
-  long_description=open("README.md").read()
+  license="MIT",
+  packages=find_packages(),
+  package_data={
+    "wordlist": ["leprechaun/data/wordlist.txt"]
+  }
 )

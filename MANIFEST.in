@@ -1,1 +1,2 @@
-include wordlist.txt README.rst LICENSE.txt
+include README.rst LICENSE.txt
+recursive-include src/ *
