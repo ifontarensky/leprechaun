@@ -2,6 +2,7 @@
 
 import argparse
 import generator
+import hashing
 
 # Create command line arguments
 parser = argparse.ArgumentParser()
@@ -42,15 +43,15 @@ def main():
   
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.
-  if hash_object == "sha1":
-    hash_object = hashlib.sha1()
-  elif hash_object == "sha256":
-    hash_object = hashlib.sha256()
-  elif hash_object == "sha512":
-    hash_object = hashlib.sha512()
+  if args.sha1:
+    algorithm = "sha1"
+  elif args.sha256:
+    algorithm = "sha256"
+  elif args.sha512:
+    algorithm = "sha512"
   else:
-    hash_object = hashlib.md5()
-  
+    algorithm = "md5" 
+
   try:
     with open(args.output, "w") as output:
       with open(args.wordlist, "r") as wordlist:
@@ -83,6 +84,27 @@ def main():
 
   except IOError as err:
     print("File error: " + str(err))
+
+def get_algorithm(algorithm):
+  """Creates the correct hashing object based on the given "algorithm"
+
+  Parameters:
+    - algorithm: The hashing algorithm to create
+
+  Returns:
+    - Hash object
+  """
+  if type(algorithm) is str:
+    if algorithm == "sha1"
+      return hashlib.sha1()
+    elif algorithm == "sha256"
+      return hashlib.sha256()
+    elif algorithm == "sha512"
+      return hashlib.sha512()
+    else
+      return hashlib.md5()
+  else:
+    raise TypeError("\"algorithm\" parameter must be a string.")
 
 if __name__ == "__main__":
   main()
