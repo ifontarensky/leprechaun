@@ -1,50 +1,26 @@
 #!/usr/bin/env python3
 
 import argparse
-import hashlib
-import itertools
-import string
-import sqlite3
-
-def get_hash(args):
-  """Returns a string representing the hash that the user wishes to use."""
-  if args.sha1:
-    return "sha1"
-  elif args.sha256:
-    return "sha256"
-  elif args.sha512:
-    return "sha512"
-  else:
-    return "md5"
-
-def digit_generator(limit):
-  """Generates a string of digits to be appened to another string.
-
-  Parameters:
-    - limit: The upper limit of the range of the length of digits to be
-      generated.
-
-  Yields:
-    - A string of digits joined together.
-
-  """
-  digits = tuple(string.digits)
-  for length in range(1, limit+1):
-    for digit in itertools.product(digits, repeat=length):
-      yield "".join(digit)
+import generator
 
 # Create command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("-w", "--wordlist", default="data/wordlist.txt",
-  help="The wordlist to hash (default=data/wordlist.txt)")
-parser.add_argument("-o", "--output", default="rainbow-table.txt",
-  help="Name of the rainbow table file (default=rainbow-table.txt)")
-parser.add_argument("-d", "--database", action="store_true",
-  help="Save in sqlite-database instead of textfile")
-parser.add_argument("--db-name", default="rainbow-table.db",
-  help="Name of the rainbow table database file (default=rainbow-table.db)")
+  help="The list of words to hash (default=data/wordlist.txt")
+parser.add_argument("-g", "--generate-wordlist", action="store_true",
+  help="Generate a wordlist dynamically instead of using a prebuilt one")
+
+parser.add_argument("-d", "--db-name", default="rainbow.db",
+  help="Name of the rainbow table database file (default=rainbow.db)")
+
+parser.add_argument("-t", "--use-textfile", action="store_true",
+  help="Save output to a plaintext file instead of sqlite database")
+parser.add_argument("-f", "--file-name", default="rainbow.txt",
+  help="Name of the plaintext file (default=rainbow.txt)")
+
 parser.add_argument("-n", "--number", type=int, default=0,
   help="Number of integers to append to end of password string (default=0)")
+
 parser.add_argument("-m", "--md5", action="store_true",
   help="Generate MD5 hashes of given passwords (default)")
 parser.add_argument("-s", "--sha1", action="store_true",
@@ -54,7 +30,7 @@ parser.add_argument("-s2", "--sha256", action="store_true",
 parser.add_argument("-s5", "--sha512", action="store_true",
   help="Generate SHA512 hashes of given passwords")
 
-if __name__ == "__main__":
+def main():
   args = parser.parse_args()
 
   if args.database:
@@ -66,7 +42,6 @@ if __name__ == "__main__":
   
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.
-  hash_object = get_hash(args)
   if hash_object == "sha1":
     hash_object = hashlib.sha1()
   elif hash_object == "sha256":
@@ -108,3 +83,6 @@ if __name__ == "__main__":
 
   except IOError as err:
     print("File error: " + str(err))
+
+if __name__ == "__main__":
+  main()
