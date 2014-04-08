@@ -53,6 +53,8 @@ def create_rainbow_table(wordlist, hashing_algorithm, output,
     db_file = output + ".db"
     db_connection = sqlite3.connect(db_file)
     db.create_table(db_connection)
+  else:
+    txt_file = open(output + ".txt", "a")
 
   # Now actually hash the words in the wordlist
   try:
@@ -62,8 +64,8 @@ def create_rainbow_table(wordlist, hashing_algorithm, output,
           entries = entry.split(":")
           db.save_pair(db_connection, entries[0], entries[1])
         else:
-          # TODO: Save entry into text file
-          pass
+          txt_file.write(entry)
+      txt_file.close()
   except IOError as err:
     print("File error: " + str(err))
 
@@ -78,11 +80,10 @@ def hash_wordlist(wordlist, hashing_algorithm):
 
   """
   for word in wordlist:
-    word = word.encode("utf-8")
     hashing_obj = hashing_algorithm.copy()
-    hashing_obj.update(word)
+    hashing_obj.update(word.encode())
 
-    return_string = hashing_obj.hexdigest() + ":" + str(word)
+    return_string = hashing_obj.hexdigest() + ":" + word
     yield return_string
 
 if __name__ == "__main__":
