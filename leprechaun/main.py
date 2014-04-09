@@ -3,6 +3,7 @@
 import argparse
 import glob
 import sqlite3
+import sys
 
 import db
 import generator
@@ -36,7 +37,6 @@ def main():
     else:
       create_rainbow_table(args.wordlist, hashing_algorithm, args.output)
   else:
-    print(sorted(glob.glob("data/wordlist*")))
     for wordlist in sorted(glob.glob("data/wordlist*")):
       if args.use_database:
         create_rainbow_table(wordlist, hashing_algorithm, args.output,
