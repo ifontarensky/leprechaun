@@ -15,8 +15,8 @@ def main():
 
   # Generate a wordlist for the user if they request one
   if args.generate_wordlist:
-    #TODO: Do this later
-    pass
+    generator.wordlist_generator("wordlist.txt", args.word_length)
+    sys.exit(0)
 
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.
