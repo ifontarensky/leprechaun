@@ -2,20 +2,24 @@
 
 import argparse
 import glob
-import sqlite3
 import sys
 
-import db
 import generator
 import hashlib
+import rainbow
 
 def main():
   """Main function."""
+  # Parse the command line arguments.
   args = parser.parse_args()
 
-  # Generate a wordlist for the user if they request one
+  # Generate a wordlist for the user if they request one.
   if args.generate_wordlist:
     generator.wordlist_generator("wordlist.txt", args.word_length)
+
+    # We just want to generate a wordlist, so exit the program when that's done.
+    # Maybe in the future we'll hash the wordlist, but for now I don't really
+    # want to.
     sys.exit(0)
 
   # Figure out the user's choice in hashing algorithms and create the
@@ -29,72 +33,24 @@ def main():
   else:
     hashing_algorithm = hashlib.md5()
 
-  # First, figure out if the user is supplying their own wordlist or not
-  if args.wordlist:
-    if args.use_database:
-      create_rainbow_table(args.wordlist, hashing_algorithm, args.output,
+  # Determine if the user is going to use their own wordlist or if they're using
+  # ours.
+  if args.wordlist: # User is using their own wordlist.
+    if args.use_database: # Save the rainbow table as an SQLite DB.
+      rainbow.create_rainbow_table(args.wordlist, hashing_algorithm, args.output,
         use_database=True)
-    else:
-      create_rainbow_table(args.wordlist, hashing_algorithm, args.output)
-  else:
+    else: # Save the rainbow table as a plaintext file.
+      rainbow.create_rainbow_table(args.wordlist, hashing_algorithm, args.output)
+  else: # User is using our wordlist.
     for wordlist in sorted(glob.glob("data/wordlist*")):
-      if args.use_database:
-        create_rainbow_table(wordlist, hashing_algorithm, args.output,
+      if args.use_database: # Save the rainbow table as an SQLite DB.
+        rainbow.create_rainbow_table(wordlist, hashing_algorithm, args.output,
           use_database=True)
-      else:
-        create_rainbow_table(wordlist, hashing_algorithm, args.output)
-
-def create_rainbow_table(
-  wordlist, hashing_algorithm, output, use_database=False):
-  """Creates the rainbow table from the given plaintext wordlist.
-
-  Parameters:
-    - wordlist: The plaintext wordlist to hash.
-    - hashing_algorithm: The algorithm to use when hashing the wordlist.
-    - output: The name of the output file.
-    - db: Flag whether the output is an SQLite DB or not (default=False).
-
-  """
-  # Create the database, if necessary
-  if use_database:
-    db_file = output + ".db"
-    db_connection = sqlite3.connect(db_file)
-    db.create_table(db_connection)
-  else:
-    txt_file = open(output + ".txt", "a")
-
-  # Now actually hash the words in the wordlist
-  try:
-    with open(wordlist, "r", encoding="utf-8") as wl:
-      for entry in hash_wordlist(wl, hashing_algorithm):
-        if use_database:
-          entries = entry.split(":")
-          db.save_pair(db_connection, entries[0], entries[1])
-        else:
-          txt_file.write(entry)
-      txt_file.close()
-  except IOError as err:
-    print("File error: " + str(err))
-
-def hash_wordlist(wordlist, hashing_algorithm):
-  """Hashes each of the words in the wordlist and yields the digests for each
-  word.
-
-  Parameters:
-    - wordlist: The wordlist which we'll be hashing.
-    - hashing_obj: The hashlib hashing algorithm which we'll be passing to the
-      appropriate function to actually hash the word.
-
-  """
-  for word in wordlist:
-    hashing_obj = hashing_algorithm.copy()
-    hashing_obj.update(word.encode())
-
-    return_string = hashing_obj.hexdigest() + ":" + word
-    yield return_string
+      else: # Save the rainbow table as a plaintext file.
+        rainbow.create_rainbow_table(wordlist, hashing_algorithm, args.output)
 
 if __name__ == "__main__":
-  # Create command line arguments
+  # Create the command line arguments.
   parser = argparse.ArgumentParser(prog="leprechaun")
   parser.add_argument("-n", "--number", type=int, default=0,
     help="Number of integers to append to end of password string (default=0)")
@@ -123,5 +79,5 @@ if __name__ == "__main__":
   group_hashing.add_argument("-s5", "--sha512", action="store_true",
     help="Generate SHA512 hashes of given passwords")
 
-  # Now start the rest of the program
+  # Now start the rest of the program.
   main()

@@ -15,18 +15,28 @@ word before computing the hash.
 *****
 Usage
 *****
-``leprechaun.py [-h] [-w WORDLIST] [-o OUTPUT] [-n NUMBER] [-m] [-s] [-s2] [-s5]``
+``leprechaun [-h] [-n NUMBER] [-w WORDLIST] [-g] [-l LENGTH] [-o OUTPUT] [-d] [-m] [-s] [-s2] [-s5]``
     
 **arguments:** ::
 
-    -h, --help show this help message and exit    
-    -w WORDLIST, --wordlist WORDLIST The wordlist to hash (default=wordlist.txt)    
-    -o OUTPUT, --output OUTPUT Name of the rainbow table file (default=rainbow-table.txt)    
-    -n NUMBER, --number NUMBER Number of integers to append to end of password string (default=0)    
-    -m, --md5 Generate MD5 hashes of given passwords (default)    
-    -s, --sha1 Generate SHA1 hashes of given passwords    
-    -s2, --sha256 Generate SHA256 hashes of given passwords    
-    -s5, --sha512 Generate SHA512 hashes of given passwords
+    (Optional Arguments)
+    -h, --help                        Show this help message and exit
+    -n NUMBER, --number NUMBER        The number of integers to append to the end of the password string (default=0)
+
+    (Wordlist Arguments)
+    -w WORDLIST, --wordlist WORDLIST  The wordlist to hash (default=wordlist.txt) 
+    -g, --generate-wordlist           Generate a wordlist automatically
+    -l LENGTH, --word-length LENGTH   The maximum length of the words to be generated (default=8)
+
+    (Output Arguments)
+    -o OUTPUT, --output OUTPUT        Name of the rainbow table file, without the file extension (default=rainbow)
+    -d, --use-database                Save the output to an SQLite DB instead of a plaintext file
+
+    (Hashing Arguments)
+    -m, --md5                         Generate MD5 hashes of given passwords (default)
+    -s, --sha1                        Generate SHA1 hashes of given passwords    
+    -s2, --sha256                     Generate SHA256 hashes of given passwords    
+    -s5, --sha512                     Generate SHA512 hashes of given passwords
 
 ********
 Examples
@@ -35,22 +45,22 @@ Below are a few simple examples on using Leprechaun.py. While not an exaustive
 compilation of use cases, the program itself is quite simple to figure out on
 one's own. ::
 
-  # Generate MD5 hashes from the included wordlist
-  python leprechaun.py
+  # Generate MD5 hashes from the included wordlist.
+  leprechaun
 
-  # Generate SHA1 hashes from the included wordlist
-  python leprechaun.py -s
+  # Generate SHA1 hashes from the included wordlist.
+  leprechaun -s
 
-  # Generate SHA1 hashes from the included wordlist, appending 2 digits to the
-  # word before hashing
-  python leprechaun.py -s -n 2
+  # Generate SHA1 hashes from the included wordlist, saving the output to an
+  # SQLite DB.
+  leprechaun -s -d
 
-  # Generate SHA1 hashes from your own wordlist
-  python leprechaun.py -s -w YOUR_WORDLIST.txt
+  # Generate SHA1 hashes from your own wordlist.
+  leprechaun -s -w YOUR_WORDLIST.txt
 
   # Generate SHA1 hashes from your own wordlist, appending 2 digits to the word
   # before hashing, and outputting to your own rainbow table file.
-  python leprechaun.py -s -n 2 -w YOUR_WORDLIST.txt -o YOUR_RAINBOW_TABLE.txt
+  leprechaun -s -n 2 -w YOUR_WORDLIST.txt -o YOUR_RAINBOW_TABLE
 
 *******
 License
@@ -77,4 +87,3 @@ License
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
-

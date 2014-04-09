@@ -36,10 +36,10 @@ def get_password(connection, digest):
 
   Parameters:
     - connection: The connection to the SQLite database.
-    - digest: The digest of the plaintext word
+    - digest: The digest of the plaintext word.
 
   Returns:
-    - The plaintext password associated with the given digest
+    - The plaintext password associated with the given digest.
   
   """
   cursor = connection.cursor()

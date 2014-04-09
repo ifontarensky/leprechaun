@@ -19,14 +19,14 @@ def digit_generator(limit):
     for digit in itertools.product(digits, repeat=length):
       yield "".join(digit)
 
-def word_generator(limit):
-  """Generates a list of words up to length specified by 'limit'
+def _word_generator(limit):
+  """Generates a list of words up to length specified by 'limit'.
 
   Parameters:
     - limit: The upper limit of the range of the word length.
 
   Yields:
-    - A list of words up to length 'limit'
+    - A range of words with a maximum length given 'limit'.
 
   """
   characters = tuple(string.ascii_letters + " ")
@@ -40,14 +40,14 @@ def wordlist_generator(file_name, word_limit=8, digit_limit=0):
   Parameters:
     - file_name: The name to give the wordlist file.
     - word_limit: The upper limit of the range of the word length. Passed to
-      "word_generator"; default=8.
+      "_word_generator"; default=8.
     - digit_limit: The upper limit of the range of digits to append to the word.
       Passed to "digit_generator"; default=0.
 
   """
   try:
     with open(file_name, "w") as output:
-      for word in word_generator(word_limit):
+      for word in _word_generator(word_limit):
         print(word, file=output)
 
         for digit in digit_generator(digit_limit):
