@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import glob
 import sqlite3
 
 import db
@@ -14,9 +15,7 @@ def main():
   # Generate a wordlist for the user if they request one
   if args.generate_wordlist:
     #TODO: Do this later
-    wordlist = ""
-  else:
-    wordlist = args.wordlist
+    pass
 
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.
@@ -29,23 +28,31 @@ def main():
   else:
     hashing_algorithm = hashlib.md5()
 
-
-  if args.use_textfile:
-    # Save as a textfile instead of a database
-    create_rainbow_table(wordlist, hashing_algorithm, args.output,
-      use_database=False)
+  # First, figure out if the user is supplying their own wordlist or not
+  if args.wordlist:
+    if args.use_database:
+      create_rainbow_table(args.wordlist, hashing_algorithm, args.output,
+        use_database=True)
+    else:
+      create_rainbow_table(args.wordlist, hashing_algorithm, args.output)
   else:
-    create_rainbow_table(wordlist, hashing_algorithm, args.output)
+    print(sorted(glob.glob("data/wordlist*")))
+    for wordlist in sorted(glob.glob("data/wordlist*")):
+      if args.use_database:
+        create_rainbow_table(wordlist, hashing_algorithm, args.output,
+          use_database=True)
+      else:
+        create_rainbow_table(wordlist, hashing_algorithm, args.output)
 
-def create_rainbow_table(wordlist, hashing_algorithm, output,
-    use_database=True):
+def create_rainbow_table(
+  wordlist, hashing_algorithm, output, use_database=False):
   """Creates the rainbow table from the given plaintext wordlist.
 
   Parameters:
     - wordlist: The plaintext wordlist to hash.
     - hashing_algorithm: The algorithm to use when hashing the wordlist.
     - output: The name of the output file.
-    - db: Flag whether the output is an SQLite DB or not (default=True).
+    - db: Flag whether the output is an SQLite DB or not (default=False).
 
   """
   # Create the database, if necessary
@@ -93,7 +100,7 @@ if __name__ == "__main__":
     help="Number of integers to append to end of password string (default=0)")
 
   group_wordlist = parser.add_argument_group("wordlist arguments")
-  group_wordlist.add_argument("-w", "--wordlist", default="data/wordlist.txt",
+  group_wordlist.add_argument("-w", "--wordlist",
     help="The list of words to hash (default=included list)")
   group_wordlist.add_argument("-g", "--generate-wordlist", action="store_true",
     help="Generate a wordlist dynamically instead of using a prebuilt one")
@@ -103,8 +110,8 @@ if __name__ == "__main__":
   group_output = parser.add_argument_group("output arguments")
   group_output.add_argument("-o", "--output", default="rainbow",
     help="The name of the output file (default=rainbow)")
-  group_output.add_argument("-t", "--use-textfile", action="store_true",
-    help="Save output to a plaintext file instead of sqlite database")
+  group_output.add_argument("-d", "--use-database", action="store_true",
+    help="Rainbow table will be an sqlite database, not a plaintext file")
 
   group_hashing = parser.add_argument_group("hashing arguments")
   group_hashing.add_argument("-m", "--md5", action="store_true",
