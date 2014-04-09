@@ -1,12 +1,27 @@
-from distutils.core import setup
+#!/usr/bin/env python3
+
+import re
+from setuptools import setup, find_packages
+
+version = re.search("^__version__\s*=\s*\"(.*)\"$",
+  open("leprechaun/__init__.py").read(), re.M).group(1)
 
 setup(
-  name='Leprechaun',
-  version="0.1.0",
+  name='leprechaun',
+  version=version,
+  description="A simple rainbow table generator",
+  long_description=open("README.rst", encoding="utf-8").read(),
   author="Zach Dziura",
   author_email="zcdziura@gmail.com",
   url="https://github.com/zcdziura/leprechaun",
-  license="LICENSE.txt",
-  description="A simple rainbow table generator",
-  long_description=open("README.md").read()
+  license="MIT",
+  packages=find_packages(),
+  package_data={
+    "leprechaun": ["data/wordlist*"]
+  },
+  entry_points={
+    "console_scripts": [
+      "main = leprechaun.main:main"
+    ]
+  }
 )
