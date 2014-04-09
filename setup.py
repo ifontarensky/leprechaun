@@ -17,7 +17,7 @@ setup(
   license="MIT",
   packages=find_packages(),
   package_data={
-    "wordlist": ["leprechaun/data/wordlist.txt"]
+    "leprechaun": ["data/wordlist*"]
   },
   entry_points={
     "console_scripts": [
