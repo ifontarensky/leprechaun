@@ -21,7 +21,7 @@ setup(
   },
   entry_points={
     "console_scripts": [
-      "main = leprechaun.main:main"
+      "leprechaun = leprechaun.__main__:main"
     ]
   }
 )
