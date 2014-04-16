@@ -13,12 +13,13 @@ def main():
   """Main function."""
   # Create the command line arguments.
   parser = argparse.ArgumentParser(prog="leprechaun")
-  parser.add_argument("-n", "--number", type=int, default=0,
-    help="Number of integers to append to end of password string (default=0)")
 
   group_wordlist = parser.add_argument_group("wordlist arguments")
-  group_wordlist.add_argument("-w", "--wordlist",
-    help="The list of words to hash (default=included lists)")
+  group_wordlist.add_argument("wordlist", type=str,
+    help="The file name of the wordlist to hash")
+  group_wordlist.add_argument("-f", "--wordlist-folder", action="store_true",
+    help="Hash all of the plaintext files in a folder, rather than a single\
+    file. The name of the folder will be given by the WORDLIST argument")
   group_wordlist.add_argument("-g", "--generate-wordlist", action="store_true",
     help="Generate a wordlist dynamically instead of using a prebuilt one")
   group_wordlist.add_argument("-l", "--word-length", type=int, default=8,
@@ -66,25 +67,24 @@ def main():
   # Because this program is intended to be distributed, we need to update the
   # paths for both the included wordlists and the outputted rainbow table.
   output = os.getcwd() + "/" + args.output
-  if not args.wordlist: # No need to interfere with the user's input!
-    wordlists = os.path.dirname(os.path.realpath(__file__))
-    wordlists = wordlists + "/data/wordlist*"
 
-  # Determine if the user is going to use their own wordlist or if they're using
-  # ours.
-  if args.wordlist: # User is using their own wordlist.
-    if args.use_database: # Save the rainbow table as an SQLite DB.
-      create_rainbow_table(args.wordlist, hashing_algorithm, args.output,
-        use_database=True)
-    else: # Save the rainbow table as a plaintext file.
-      create_rainbow_table(args.wordlist, hashing_algorithm, args.output)
-  else: # User is using our wordlist.
-    for wordlist in sorted(glob.glob(wordlists)):
+  if args.wordlist_folder:
+    # If the user wants to use a bunch of wordlists within a folder, gather a
+    # list of the names of the files.
+    for wordlist in sorted(glob.glob(os.path.abspath(args.wordlist)
+        + "/*.txt")):
       if args.use_database: # Save the rainbow table as an SQLite DB.
-        create_rainbow_table(wordlist, hashing_algorithm, args.output,
+        create_rainbow_table(wordlist, hashing_algorithm, output,
           use_database=True)
       else: # Save the rainbow table as a plaintext file.
-        create_rainbow_table(wordlist, hashing_algorithm, args.output)
+        create_rainbow_table(wordlist, hashing_algorithm, output)
+  else:
+    # The user will only be using one wordlist file.
+    if args.use_database:
+      create_rainbow_table(args.wordlist, hashing_algorithm, output,
+        use_database=True)
+    else:
+      create_rainbow_table(args.wordlist, hashing_algorithm, output)
 
 if __name__ == "__main__":
   main()

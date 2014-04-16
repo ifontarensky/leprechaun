@@ -21,7 +21,6 @@ Usage
 
     (Optional Arguments)
     -h, --help                        Show this help message and exit
-    -n NUMBER, --number NUMBER        The number of integers to append to the end of the password string (default=0)
 
     (Wordlist Arguments)
     -w WORDLIST, --wordlist WORDLIST  The wordlist to hash (default=wordlist.txt) 
@@ -45,22 +44,25 @@ Below are a few simple examples on using Leprechaun.py. While not an exaustive
 compilation of use cases, the program itself is quite simple to figure out on
 one's own. ::
 
-  # Generate MD5 hashes from the included wordlist.
-  leprechaun
+  # Create a rainbow table using the MD5 hashing algorithm.
+  leprechaun /path/to/your/wordlist.txt
 
-  # Generate SHA1 hashes from the included wordlist.
-  leprechaun -s
+  # Create a rainbow table using the SHA-1 hashing algorithm.
+  leprechaun -s /path/to/your/wordlist.txt
 
-  # Generate SHA1 hashes from the included wordlist, saving the output to an
-  # SQLite DB.
-  leprechaun -s -d
+  # Create a rainbow table using the SHA-1 hashing algorithm, saving the
+  # output in an SQLite database.
+  leprechaun -s -d /path/to/your/wordlist.txt
 
-  # Generate SHA1 hashes from your own wordlist.
-  leprechaun -s -w YOUR_WORDLIST.txt
+  # Create a rainbow table using the SHA-256 hashing algorithm, hashing all of
+  # the plaintext files in a given directory, saving the output in an SQLite
+  # database.
+  leprechaun -s2 -d -f /path/to/your/wordlists
 
-  # Generate SHA1 hashes from your own wordlist, appending 2 digits to the word
-  # before hashing, and outputting to your own rainbow table file.
-  leprechaun -s -n 2 -w YOUR_WORDLIST.txt -o YOUR_RAINBOW_TABLE
+  # Create a rainbow table using the SHA-256 hashing algorithm, hashing all of
+  # the plaintext files in a given directory, saving the output in an SQLite
+  # database named "patty"
+  leprechaun -s2 -d -o patty -f /path/to/your/wordlists
 
 *******
 License

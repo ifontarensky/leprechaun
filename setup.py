@@ -16,9 +16,6 @@ setup(
   url="https://github.com/zcdziura/leprechaun",
   license="MIT",
   packages=find_packages(),
-  package_data={
-    "leprechaun": ["data/wordlist*"]
-  },
   entry_points={
     "console_scripts": [
       "leprechaun = leprechaun.__main__:main"
