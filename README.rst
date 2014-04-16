@@ -64,6 +64,17 @@ one's own. ::
   # database named "patty"
   leprechaun -s2 -d -o patty -f /path/to/your/wordlists
 
+*********
+Wordlists
+*********
+Because any good wordlist contains several million lines of words, and several
+million lines of anything takes up a heck of a lot of space, the previously
+distributed wordlist is no longer being distributed. But don't fret! I've
+uploaded that same wordlist onto the Internet for everyone to enjoy. You may
+find it here_.
+
+.. _here: https://dl.dropboxusercontent.com/u/4412788/wordlist.txt
+
 *******
 License
 *******
