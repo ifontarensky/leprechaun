@@ -13,15 +13,15 @@ def main():
   """Main function."""
   # Create the command line arguments.
   parser = argparse.ArgumentParser(prog="leprechaun")
+  parser.add_argument("wordlist", type=str, metavar="WORDLIST",
+    help="The file name of the wordlist to hash")
 
   group_wordlist = parser.add_argument_group("wordlist arguments")
-  group_wordlist.add_argument("wordlist", type=str,
-    help="The file name of the wordlist to hash")
   group_wordlist.add_argument("-f", "--wordlist-folder", action="store_true",
     help="Hash all of the plaintext files in a folder, rather than a single\
     file. The name of the folder will be given by the WORDLIST argument")
   group_wordlist.add_argument("-g", "--generate-wordlist", action="store_true",
-    help="Generate a wordlist dynamically instead of using a prebuilt one")
+    help="Generate a wordlist dynamically instead of using a pre-built one")
   group_wordlist.add_argument("-l", "--word-length", type=int, default=8,
     help="Maximum word length for generated wordlist")
 
@@ -66,13 +66,13 @@ def main():
 
   # Because this program is intended to be distributed, we need to update the
   # paths for both the included wordlists and the outputted rainbow table.
-  output = os.getcwd() + "/" + args.output
+  output = os.path.abspath(args.output)
 
   if args.wordlist_folder:
     # If the user wants to use a bunch of wordlists within a folder, gather a
     # list of the names of the files.
-    for wordlist in sorted(glob.glob(os.path.abspath(args.wordlist)
-        + "/*.txt")):
+    for wordlist in sorted(glob.glob(os.path.abspath(args.wordlist +
+      "/*.txt"))):
       if args.use_database: # Save the rainbow table as an SQLite DB.
         create_rainbow_table(wordlist, hashing_algorithm, output,
           use_database=True)

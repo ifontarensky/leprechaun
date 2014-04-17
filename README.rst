@@ -31,12 +31,19 @@ Usage
     
 **arguments:** ::
 
+    (Positional Arguments)
+    WORDLIST                          The file name of the wordlist to hash
+
     (Optional Arguments)
     -h, --help                        Show this help message and exit
 
     (Wordlist Arguments)
-    -w WORDLIST, --wordlist WORDLIST  The wordlist to hash (default=wordlist.txt) 
-    -g, --generate-wordlist           Generate a wordlist automatically
+    -f, --wordlist-folder             Hash all of the plaintext files in a
+                                      folder, rather than a single file. The
+                                      name of the folder will be given by the
+                                      WORDLIST argument
+    -g, --generate-wordlist           Generate a new wordlist dynamically,
+                                      instead of using a pre-built one
     -l LENGTH, --word-length LENGTH   The maximum length of the words to be generated (default=8)
 
     (Output Arguments)
