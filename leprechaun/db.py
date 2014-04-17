@@ -24,10 +24,10 @@ def save_pair(connection, digest, word):
 
   """
   cursor = connection.cursor()
-  t = (digest, word)
+  _t = (digest, word)
 
   cursor.execute("""INSERT INTO rainbow
-    VALUES (NULL, ?, ?)""", t)
+    VALUES (NULL, ?, ?)""", _t)
   
   connection.commit()
 
@@ -43,6 +43,6 @@ def get_password(connection, digest):
   
   """
   cursor = connection.cursor()
-  t = (digest)
-  cursor.execute("SELECT word FROM rainbow WHERE digest=?", t)
+  _t = (digest,)
+  cursor.execute("SELECT word FROM rainbow WHERE digest=?", _t)
   return cursor.fetchone()
