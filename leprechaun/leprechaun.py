@@ -47,6 +47,7 @@ def main():
   # Generate a wordlist for the user if they request one.
   if args.generate_wordlist:
     wordlist_generator("wordlist.txt", args.word_length)
+    print("wordlist.txt has been generated.")
 
     # We just want to generate a wordlist, so exit the program when that's done.
     # Maybe in the future we'll hash the wordlist, but for now I don't really
@@ -86,5 +87,7 @@ def main():
     else:
       create_rainbow_table(args.wordlist, hashing_algorithm, output)
 
+  print("Rainbow table has been generated.")
+  
 if __name__ == "__main__":
   main()
