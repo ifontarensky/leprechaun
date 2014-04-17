@@ -1,7 +1,7 @@
 #############
 Leprechaun.py
 #############
-A simple rainbow table generator written in Python.
+A simple rainbow table generator written in **Python 3**.
 
 ********
 Synopsis
@@ -11,6 +11,12 @@ rainbow tables. This script can compute hashes using the MD5, SHA1, SHA256 and
 SHA512 algorithms. Leprechaun.py can use either the default wordlist, or a user
 supplied wordlist, optionally appending an arbitrary number of digits to the
 word before computing the hash.
+
+************
+Installation
+************
+``pip install leprechaun``
+
 
 *****
 Usage
