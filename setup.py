@@ -20,5 +20,15 @@ setup(
     "console_scripts": [
       "leprechaun = leprechaun.__main__:main"
     ]
-  }
+  },
+  classifiers = [
+    "Development Status :: 4 - Beta",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Environment :: Console",
+    "Topic :: Security",
+    "Topic :: Security :: Cryptography"
+  ]
 )

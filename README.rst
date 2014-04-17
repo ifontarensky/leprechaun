@@ -8,20 +8,26 @@ Synopsis
 ********
 Leprechaun.py is a simple Python program used for generating cryptographic
 rainbow tables. This script can compute hashes using the MD5, SHA1, SHA256 and
-SHA512 algorithms. Leprechaun.py can use either the default wordlist, or a user
-supplied wordlist, optionally appending an arbitrary number of digits to the
-word before computing the hash.
+SHA512 algorithms. Leprechaun can hash any arbitrary number of plaintext files,
+as long as they're within the same directory. Or, if you're a normal person
+without a huge directory filled with wordlists, you can hash one single file.
+The choice is yours! 
 
 ************
 Installation
 ************
-``pip install leprechaun``
+Leprechaun is available for download from PyPI using ``pip``, just like
+everything else! ::
 
+    $ mkdir DIRECTORY
+    $ cd DIRECTORY
+    $ virtualenv -p python3 .
+    $ pip install leprechaun
 
 *****
 Usage
 *****
-``leprechaun [-h] [-n NUMBER] [-w WORDLIST] [-g] [-l LENGTH] [-o OUTPUT] [-d] [-m] [-s] [-s2] [-s5]``
+``leprechaun [-h] [-g] [-l LENGTH] [-d] [-o OUTPUT] [-m] [-s] [-s2] [-s5] WORDLIST``
     
 **arguments:** ::
 
@@ -79,7 +85,7 @@ distributed wordlist is no longer being distributed. But don't fret! I've
 uploaded that same wordlist onto the Internet for everyone to enjoy. You may
 find it here_.
 
-.. _here: https://dl.dropboxusercontent.com/u/4412788/wordlist.txt
+.. _here: https://dl.dropboxusercontent.com/u/4412788/wordlist.tar.gz
 
 *******
 License
