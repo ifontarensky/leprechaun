@@ -98,7 +98,7 @@ distributed wordlist is no longer being distributed. But don't fret! I've
 uploaded that same wordlist onto the Internet for everyone to enjoy. You may
 find it here_.
 
-.. _here: https://dl.dropboxusercontent.com/u/4412788/wordlist.tar.gz
+.. _here: https://mega.co.nz/#!mMdSWDgS!Bst3ZBdshvHo0uI5R_AZ8C2RZASSBnAmlnsEh4ffkoU
 
 *******
 License
