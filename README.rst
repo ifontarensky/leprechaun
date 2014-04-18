@@ -32,7 +32,8 @@ Usage
 **arguments:** ::
 
     (Positional Arguments)
-    WORDLIST                          The file name of the wordlist to hash
+    WORDLIST                          The file name of the wordlist to hash,
+                                      without the file extension
 
     (Optional Arguments)
     -h, --help                        Show this help message and exit
@@ -40,15 +41,20 @@ Usage
     (Wordlist Arguments)
     -f, --wordlist-folder             Hash all of the plaintext files in a
                                       folder, rather than a single file. The
-                                      name of the folder will be given by the
+                                      name of the folder will be set by the
                                       WORDLIST argument
-    -g, --generate-wordlist           Generate a new wordlist dynamically,
-                                      instead of using a pre-built one
-    -l LENGTH, --word-length LENGTH   The maximum length of the words to be generated (default=8)
+    -g, --generate-wordlist           Generate a wordlist dynamically instead
+                                      of using a pre-built one; the name of the
+                                      dynamically generated wordlist will be set
+                                      by the WORDLIST argument
+    -l LENGTH, --word-length LENGTH   The maximum length of the words to be
+                                      generated (default=8)
 
     (Output Arguments)
-    -o OUTPUT, --output OUTPUT        Name of the rainbow table file, without the file extension (default=rainbow)
-    -d, --use-database                Save the output to an SQLite DB instead of a plaintext file
+    -o OUTPUT, --output OUTPUT        Name of the rainbow table file, without
+                                      the file extension (default=rainbow)
+    -d, --use-database                Save the output to an SQLite DB instead
+                                      of a plaintext file
 
     (Hashing Arguments)
     -m, --md5                         Generate MD5 hashes of given passwords (default)
