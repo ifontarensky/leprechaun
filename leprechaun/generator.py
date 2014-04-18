@@ -34,7 +34,7 @@ def _word_generator(limit):
     for char in itertools.product(characters, repeat=length):
       yield "".join(char)
 
-def wordlist_generator(file_name, word_limit=8, digit_limit=0):
+def create_wordlist(file_name, word_limit=8, digit_limit=0):
   """Generates a wordlist plaintext file.
 
   Parameters:

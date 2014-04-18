@@ -6,7 +6,7 @@ import hashlib
 import os
 import sys
 
-from .generator import wordlist_generator
+from .generator import create_wordlist
 from .rainbow import create_rainbow_table
 
 def main():
@@ -14,19 +14,21 @@ def main():
   # Create the command line arguments.
   parser = argparse.ArgumentParser(prog="leprechaun")
   parser.add_argument("wordlist", type=str, metavar="WORDLIST",
-    help="The file name of the wordlist to hash")
+    help="The file name of the wordlist to hash, without the file extension")
 
   group_wordlist = parser.add_argument_group("wordlist arguments")
   group_wordlist.add_argument("-f", "--wordlist-folder", action="store_true",
     help="Hash all of the plaintext files in a folder, rather than a single\
-    file. The name of the folder will be given by the WORDLIST argument")
+    file; the name of the folder will be set by the WORDLIST argument")
   group_wordlist.add_argument("-g", "--generate-wordlist", action="store_true",
-    help="Generate a wordlist dynamically instead of using a pre-built one")
+    help="Generate a wordlist dynamically instead of using a pre-built one;\
+    the name of the dynamically generated wordlist will be set by the WORDLIST\
+    argument")
   group_wordlist.add_argument("-l", "--word-length", type=int, default=8,
     help="Maximum word length for generated wordlist")
 
   group_output = parser.add_argument_group("output arguments")
-  group_output.add_argument("-o", "--output", default="rainbow",
+  group_output.add_argument("-o", "--output", type=str,
     help="The name of the output file (default=rainbow)")
   group_output.add_argument("-d", "--use-database", action="store_true",
     help="Rainbow table will be an sqlite database, not a plaintext file")
@@ -46,7 +48,9 @@ def main():
 
   # Generate a wordlist for the user if they request one.
   if args.generate_wordlist:
-    wordlist_generator("wordlist.txt", args.word_length)
+    output_file_name = os.path.abspath(args.wordlist + ".txt")
+    create_wordlist(output_file_name, args.word_length)
+    print("Wordlist has been generated.")
 
     # We just want to generate a wordlist, so exit the program when that's done.
     # Maybe in the future we'll hash the wordlist, but for now I don't really
@@ -64,9 +68,13 @@ def main():
   else:
     hashing_algorithm = hashlib.md5()
 
-  # Because this program is intended to be distributed, we need to update the
-  # paths for both the included wordlists and the outputted rainbow table.
-  output = os.path.abspath(args.output)
+  # If the user provided their own name for the rainbow table, then use that.
+  # Otherwise, use "rainbow".
+  if not args.output:
+    output_file_name = "rainbow"
+  else:
+    output_file_name = args.output
+  output = os.path.abspath(output_file_name)
 
   if args.wordlist_folder:
     # If the user wants to use a bunch of wordlists within a folder, gather a
@@ -86,5 +94,7 @@ def main():
     else:
       create_rainbow_table(args.wordlist, hashing_algorithm, output)
 
+  print("Rainbow table has been generated.")
+  
 if __name__ == "__main__":
   main()

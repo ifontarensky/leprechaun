@@ -41,5 +41,7 @@ nosetests.xml
 rainbow-table.txt
 rainbow-table.db
 rainbow.db
+rainbow.txt
+wordlist.txt
 *~
 *-journal
