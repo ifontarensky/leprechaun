@@ -2,7 +2,7 @@
 
 import sqlite3
 
-from .db import create_table, save_pair
+from .db import DB
 
 def _hash_wordlist(wordlist, hashing_algorithm):
   """Hashes each of the words in the wordlist and yields the digests for each
@@ -40,8 +40,8 @@ def create_rainbow_table(
   # Create the database, if necessary.
   if use_database:
     db_file = output + ".db"
-    db_connection = sqlite3.connect(db_file)
-    create_table(db_connection)
+    database = DB(db_file)
+    database.create_table()
   else:
     # Otherwise, create the plaintext file.
     txt_file = open(output + ".txt", "a")
@@ -52,7 +52,7 @@ def create_rainbow_table(
       for entry in _hash_wordlist(wl, hashing_algorithm):
         if use_database:
           entries = entry.split(":")
-          save_pair(db_connection, entries[0], entries[1])
+          database.save_pair(entries[0], entries[1])
         else:
           txt_file.write(entry)
       txt_file.close()
