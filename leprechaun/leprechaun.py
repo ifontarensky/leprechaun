@@ -7,7 +7,7 @@ import os
 import sys
 
 from .generator import create_wordlist
-from .rainbow import create_rainbow_table
+from .rainbow import create_rainbow_table, split_wordlist
 
 def main():
   """Main function."""
@@ -15,6 +15,9 @@ def main():
   parser = argparse.ArgumentParser(prog="leprechaun")
   parser.add_argument("wordlist", type=str, metavar="WORDLIST",
     help="The file name of the wordlist to hash, without the file extension")
+  parser.add_argument("-j", "--jobs", type=int, default=1,
+    help="The amount of processes to fork in order to hash the wordlist;\
+    (default=1)")
 
   group_wordlist = parser.add_argument_group("wordlist arguments")
   group_wordlist.add_argument("-f", "--wordlist-folder", action="store_true",
@@ -56,6 +59,16 @@ def main():
     # Maybe in the future we'll hash the wordlist, but for now I don't really
     # want to.
     sys.exit(0)
+
+  # Make sure the user inputted a correct value for the number of job processes
+  # to create.
+  if args.jobs < 1:
+    args.jobs = 1
+
+  # Split the wordlist into pieces, with each piece getting its own worker
+  # process.
+  if not args.wordlist_folder:
+    split_wordlist(args.wordlist, args.jobs)
 
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.
