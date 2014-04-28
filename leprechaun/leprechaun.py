@@ -67,8 +67,9 @@ def main():
 
   # Split the wordlist into pieces, with each piece getting its own worker
   # process.
+  files = None
   if not args.wordlist_folder:
-    split_wordlist(args.wordlist, args.jobs)
+    files = split_wordlist(args.wordlist, args.jobs)
 
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.

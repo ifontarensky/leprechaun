@@ -34,20 +34,22 @@ def split_wordlist(wordlist, split):
     - wordlist: The original wordlist which will be split up.
     - split: The amount of times to split up the wordlist.
 
+  Returns:
+    - list of split up wordlists; split >= 2
+    - None; split < 2
   """
   if split < 2: # No sense in splitting a file into one part
-    return
+    return None
   else:
     file_name = wordlist.split(".")[0] # We'll need this for later
+    # Create a list of pointers to all of the new "split files", for easy
+    # access.
+    files = [
+      open(file_name + "_" + str(i) + ".txt", "w", encoding="utf-8") for i in
+        range(split)
+    ]
     
     with open(wordlist, encoding="utf-8") as f:
-      # Create a list of pointers to all of the new "split files", for easy
-      # access.
-      files = [
-        open(file_name + "_" + str(i) + ".txt", "w", encoding="utf-8") for i in
-          range(split)
-      ]
-
       index = 0 # This determines which "split file" we're writing the line to
       for line in f:
         line = line.strip()
@@ -55,9 +57,7 @@ def split_wordlist(wordlist, split):
         
         index = (index + 1) % split
 
-      # Now to clean up the mess!
-      for g in files:
-        g.close()
+    return files
 
 def create_rainbow_table(
   wordlist, hashing_algorithm, output, use_database=False):
