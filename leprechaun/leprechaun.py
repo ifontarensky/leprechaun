@@ -20,9 +20,9 @@ def main():
     (default=1)")
 
   group_wordlist = parser.add_argument_group("wordlist arguments")
-  group_wordlist.add_argument("-f", "--wordlist-folder", action="store_true",
-    help="Hash all of the plaintext files in a folder, rather than a single\
-    file; the name of the folder will be set by the WORDLIST argument")
+  group_wordlist.add_argument("-u", "--multiple-wordlists", action="store_true",
+    help="Hash all of the plaintext files in a directory, rather than a single\
+    file; the name of the directory will be set by the WORDLIST argument")
   group_wordlist.add_argument("-g", "--generate-wordlist", action="store_true",
     help="Generate a wordlist dynamically instead of using a pre-built one;\
     the name of the dynamically generated wordlist will be set by the WORDLIST\
@@ -65,12 +65,6 @@ def main():
   if args.jobs < 1:
     args.jobs = 1
 
-  # Split the wordlist into pieces, with each piece getting its own worker
-  # process.
-  files = None
-  if not args.wordlist_folder:
-    files = split_wordlist(args.wordlist, args.jobs)
-
   # Figure out the user's choice in hashing algorithms and create the
   # appropriate hashlib object for the job.
   if args.sha1:
@@ -90,7 +84,7 @@ def main():
     output_file_name = args.output
   output = os.path.abspath(output_file_name)
 
-  if args.wordlist_folder:
+  if args.multiple_wordlists:
     # If the user wants to use a bunch of wordlists within a folder, gather a
     # list of the names of the files.
     for wordlist in sorted(glob.glob(os.path.abspath(args.wordlist +

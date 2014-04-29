@@ -32,8 +32,7 @@ Usage
 **arguments:** ::
 
     (Positional Arguments)
-    WORDLIST                          The file name of the wordlist to hash,
-                                      without the file extension
+    WORDLIST                          The file name of the wordlist to hash
 
     (Optional Arguments)
     -h, --help                        Show this help message and exit
