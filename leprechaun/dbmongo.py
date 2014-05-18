@@ -1,48 +1,50 @@
 #!/usr/bin/env python3
 
-import sqlite3
+from .abstract_mongo import Mongo
+import hashlib
 
-def create_table(connection):
-  """Creates a new table in the database.
+def create_table(connections):
+    """Creates a new table in the database.
 
-  Parameters:
-    - connection: The connection to the SQLite database.
+    Parameters:
+    - connection: The connection to the Mongo database.
 
-  """
-  cursor = connection.cursor()
-  cursor.execute("""CREATE TABLE IF NOT EXISTS rainbow
-    (id INTEGER PRIMARY KEY, digest TEXT, word TEXT)""")
-  connection.commit()
+    """
+    for key in ["md5", "sha1", "sha256", "sha512"]:
+        connections.create_index("rainbow", key)
 
-def save_pair(connection, digest, word):
-  """Save both the original word and its digest into the database.
 
-  Parameters:
+def save_pair(connection, word):
+    """Save both the original word and its digest into the database.
+
+    Parameters:
     - connection: The connection to the SQLite database.
     - digest: The digest of the plaintext word; acts as the primary key.
     - word: The plaintext word.
 
-  """
-  cursor = connection.cursor()
-  _t = (digest, word)
+    """
+    if not connection.find_one("rainbow", {"word": word}):
+        value = {
+            "md5": hashlib.md5(word.encode()).hexdigest(),
+            "sha1": hashlib.sha1(word.encode()).hexdigest(),
+            "sha256": hashlib.sha256(word.encode()).hexdigest(),
+            "sha512": hashlib.sha512(word.encode()).hexdigest(),
+            "word": word
+        }
+        connection.insert("rainbow", value)
 
-  cursor.execute("""INSERT INTO rainbow
-    VALUES (NULL, ?, ?)""", _t)
-  
-  connection.commit()
 
 def get_password(connection, digest):
-  """Query the database for the digest and return the plaintext password.
+    """Query the database for the digest and return the plaintext password.
 
-  Parameters:
+    Parameters:
     - connection: The connection to the SQLite database.
     - digest: The digest of the plaintext word.
 
-  Returns:
+    Returns:
     - The plaintext password associated with the given digest.
-  
-  """
-  cursor = connection.cursor()
-  _t = (digest,)
-  cursor.execute("SELECT word FROM rainbow WHERE digest=?", _t)
-  return cursor.fetchone()
+
+    """
+    print(len(digest))
+    return connection.find_one("rainbow", {"sha256": digest})
+
