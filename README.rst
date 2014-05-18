@@ -22,12 +22,14 @@ everything else! ::
     $ mkdir DIRECTORY
     $ cd DIRECTORY
     $ virtualenv -p python3 .
+    $ source bin/activate
+    $ pip install pymongo
     $ pip install leprechaun
 
 *****
 Usage
 *****
-``leprechaun [-h] [-g] [-l LENGTH] [-d] [-o OUTPUT] [-m] [-s] [-s2] [-s5] WORDLIST``
+``leprechaun [-h] [-g] [-l LENGTH] [--sqlite|--mongo] [-o OUTPUT] [-m] [-s] [-s2] [-s5] WORDLIST``
     
 **arguments:** ::
 
@@ -53,8 +55,10 @@ Usage
     (Output Arguments)
     -o OUTPUT, --output OUTPUT        Name of the rainbow table file, without
                                       the file extension (default=rainbow)
-    -d, --use-database                Save the output to an SQLite DB instead
-                                      of a plaintext file
+    --sqlite                          Rainbow table will be an sqlite database, not a
+                                      plaintext file
+    --mongo                           Rainbow table will be store in Mongo database
+
 
     (Hashing Arguments)
     -m, --md5                         Generate MD5 hashes of given passwords (default)
